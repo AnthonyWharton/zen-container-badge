@@ -3,6 +3,8 @@
 store's 600x400 at 2x). Requires Pillow.
 
 Usage: compose-preview.py OUT.png "Label one" shot1.png "Label two" shot2.png ...
+Shots are cropped to a common size from their top-left corner, so take each
+one starting at the window edge.
 """
 import sys
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -37,9 +39,12 @@ def main(out, pairs):
 
     n = len(pairs)
     col_w = (W - 2 * MARGIN - GAP * (n - 1)) // n
+    images = [Image.open(path).convert("RGB") for _, path in pairs]
+    # Crop every shot to the same size, anchored at the window's top-left corner.
+    crop_w, crop_h = min(im.width for im in images), min(im.height for im in images)
     panels = []
-    for label, path in pairs:
-        im = Image.open(path).convert("RGB")
+    for (label, _), im in zip(pairs, images):
+        im = im.crop((0, 0, crop_w, crop_h))
         scale = col_w / im.width
         im = im.resize((col_w, round(im.height * scale)), Image.LANCZOS)
         panels.append((label, im))

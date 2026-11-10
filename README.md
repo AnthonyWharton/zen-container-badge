@@ -9,6 +9,8 @@ printing the container name next to the address; Zen hides that label because
 its sidebar URL bar is narrow. This mod brings it back as a compact,
 truncating badge that fits the sidebar.
 
+![Container Badge inline in the URL bar, and on its own line below it](image.png)
+
 ## Status
 
 Zen's mods store looks mothballed: the `zen-browser/theme-store` repository
