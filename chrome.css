@@ -1,0 +1,252 @@
+/* ==========================================================================
+   Container Badge — a Zen Browser mod
+   https://github.com/AnthonyWharton/zen-container-badge
+
+   Shows the *name* of the active tab's Firefox container as a coloured pill
+   in the URL bar, so you can tell containers apart even when several share
+   the same colour.
+
+   Background: Firefox already renders `#userContext-icons` (icon + label) in
+   the URL bar, but Zen hides the whole thing unless
+   `zen.urlbar.show-contextual-id` is on, and hides the label whenever the
+   URL bar is narrower than 350px (i.e. always, in the sidebar). This mod
+   undoes both and restyles the indicator as a compact badge.
+
+   DOM (from Firefox's navigator-toolbox.inc.xhtml):
+     #urlbar > .urlbar-input-container
+       #page-action-buttons
+         #userContext-icons.identity-color-<c>.identity-icon-<i>  (hidden="true" when no container)
+           #userContext-label                                      (value = container name)
+           #userContext-indicator                                  (container icon)
+
+   Colours come from Firefox's usercontext.css via --identity-tab-color /
+   --identity-icon-color (gray containers resolve to currentColor).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tunables. The string preference in preferences.json writes
+   --zen-mods-container-badge-max-width on :root; everything else is fixed
+   here but kept as variables so forks can tweak them in one place.
+   -------------------------------------------------------------------------- */
+:root {
+  --cb-max-width: var(--zen-mods-container-badge-max-width, 9em);
+  --cb-fill-opacity: 16%;
+  --cb-border-opacity: 45%;
+  --cb-font-size: 0.82em;
+  --cb-radius: 999px;
+}
+
+/* The identity-color-<c> class (and thus --identity-tab-color) lives on
+   #userContext-icons itself, so the colour alias must be resolved here, not
+   on :root. */
+#userContext-icons {
+  --cb-color: var(--identity-tab-color, currentColor);
+}
+
+/* --------------------------------------------------------------------------
+   1. Always show the indicator (overrides Zen's show-contextual-id pref),
+      but respect Firefox's own hidden="true" when the tab has no container.
+   -------------------------------------------------------------------------- */
+#userContext-icons:not([hidden]) {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-inline: 2px 4px;
+  padding: 1px 7px 1px 5px;
+  border-radius: var(--cb-radius);
+  background-color: color-mix(in srgb, var(--cb-color) var(--cb-fill-opacity), transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cb-color) var(--cb-border-opacity), transparent);
+  transition: background-color 0.15s ease;
+}
+
+#userContext-icons:not([hidden]):hover {
+  background-color: color-mix(in srgb, var(--cb-color) 28%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   2. Un-hide the label (Zen: @container urlbar-container (width < 350px);
+      Firefox: @media (max-width: 770px)) and style it.
+   -------------------------------------------------------------------------- */
+#userContext-label {
+  display: revert !important;
+  order: 2;
+  margin: 0 !important;
+  max-width: var(--cb-max-width) !important;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--cb-font-size);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--cb-color) !important;
+}
+
+/* Icon first, then the name. */
+#userContext-indicator {
+  order: 1;
+  width: 12px !important;
+  height: 12px !important;
+  margin-inline: 0 !important;
+  fill: var(--cb-color) !important;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Preference: badge style (dropdown zen.mods.container-badge.style)
+      "pill" is the default above. "outline" drops the fill; "text" drops
+      both and shows plain coloured text.
+   -------------------------------------------------------------------------- */
+:root:has(#theme-Container-Badge[zen-mods-container-badge-style="outline"]) {
+  --cb-fill-opacity: 0%;
+  --cb-border-opacity: 60%;
+}
+
+:root:has(#theme-Container-Badge[zen-mods-container-badge-style="text"]) {
+  --cb-fill-opacity: 0%;
+  --cb-border-opacity: 0%;
+}
+
+:root:has(#theme-Container-Badge[zen-mods-container-badge-style="text"]) #userContext-icons:not([hidden]) {
+  padding-inline: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Preference: hide the container icon (checkbox
+      zen.mods.container-badge.hide-icon) — name only.
+   -------------------------------------------------------------------------- */
+@media -moz-pref("zen.mods.container-badge.hide-icon") {
+  #userContext-indicator {
+    display: none !important;
+  }
+
+  #userContext-icons:not([hidden]) {
+    padding-inline: 7px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4b. Firefox hides the whole #page-action-buttons box while you type
+       (#urlbar[usertyping]), taking the badge with it. Bring the box back
+       but keep every other page action hidden, so only the badge survives.
+   -------------------------------------------------------------------------- */
+@media not -moz-pref("zen.mods.container-badge.hide-when-typing") {
+  #urlbar[usertyping] > .urlbar-input-container > #page-action-buttons:has(#userContext-icons:not([hidden])) {
+    display: flex !important;
+  }
+
+  #urlbar[usertyping] > .urlbar-input-container > #page-action-buttons > :not(#userContext-icons) {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Preference: hide the badge while typing in the URL bar (checkbox
+      zen.mods.container-badge.hide-when-typing). Gives the input the full
+      width back while you are actually using it.
+   -------------------------------------------------------------------------- */
+@media -moz-pref("zen.mods.container-badge.hide-when-typing") {
+  #urlbar:is([focused], [breakout-extend]) #userContext-icons {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Preference: placement (dropdown zen.mods.container-badge.placement)
+      "inline" (default) keeps the badge in the URL bar row, where Firefox
+      puts it. "below" moves it onto its own line directly under the URL bar
+      so it never steals width from the address or the extension buttons.
+      Single-toolbar layout only; see the note on the block below.
+      ("strip" is the pre-0.2 name for "below" and is still honoured.)
+   -------------------------------------------------------------------------- */
+/* Only Zen's single-toolbar layout puts the URL bar in the sidebar with a
+   free line under it. In the multiple/collapsed toolbar layouts the URL bar
+   is in the top toolbar, so "below" silently falls back to inline there. */
+:root[zen-single-toolbar="true"]:has(#theme-Container-Badge:is([zen-mods-container-badge-placement="below"], [zen-mods-container-badge-placement="strip"])) {
+  /* Firefox sets `overflow: clip` on the input container, which would
+     swallow a badge positioned outside the row. The input has its own fade
+     masks, so letting these boxes overflow is harmless. */
+  /* Position the badge against #urlbar itself, which is the box the visible
+     URL bar background is drawn on. The inner input container is inset a few
+     pixels from it, so anchoring there left the badge visibly misaligned. */
+  /* Zen loads mod CSS as a *user* stylesheet, so without !important these
+     lose to Firefox's own `.urlbar-input-container { position: relative }`
+     and the badge silently anchors to the wrong box. */
+  #urlbar:not([breakout-extend]) {
+    position: relative !important;
+  }
+
+  #urlbar:not([breakout-extend]) > .urlbar-input-container {
+    position: static !important;
+  }
+
+  #urlbar > .urlbar-input-container {
+    overflow: visible !important;
+  }
+
+  #page-action-buttons {
+    overflow: visible !important;
+  }
+
+  /* Zen locks #nav-bar to --zen-toolbar-height with !important, so the extra
+     room has to be a margin *outside* that box. The natural gap below the
+     nav bar is ~8px; 22px more centres an 18px pill placed 5px down. */
+  #nav-bar:has(#userContext-icons:not([hidden])) {
+    margin-bottom: 22px !important;
+  }
+
+  #userContext-icons:not([hidden]) {
+    position: absolute;
+    top: calc(100% + 5px);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100% - 8px);
+    z-index: 3;
+    margin: 0;
+    height: 18px;
+    box-sizing: border-box;
+    padding: 0 10px 0 8px;
+    justify-content: center;
+    border-radius: var(--cb-radius);
+  }
+
+
+  /* The expanded/floating URL bar is for typing and lays itself out
+     differently; an out-of-row badge lands on the input text there. */
+  #urlbar[breakout-extend] #userContext-icons {
+    display: none !important;
+  }
+
+  /* 7. Preference: alignment of the own-line badge
+        (dropdown zen.mods.container-badge.align). Centre is the default.
+        The badge's positioning box sits 5px inside the visible bar, so
+        left/right/full pull outwards by --cb-edge to land on the bar's edge. */
+  --cb-edge: 5px;
+
+  &:has(#theme-Container-Badge[zen-mods-container-badge-align="left"]) #userContext-icons:not([hidden]) {
+    inset-inline-start: calc(-1 * var(--cb-edge));
+    transform: none;
+  }
+
+  &:has(#theme-Container-Badge[zen-mods-container-badge-align="right"]) #userContext-icons:not([hidden]) {
+    inset-inline-start: auto;
+    inset-inline-end: calc(-1 * var(--cb-edge));
+    transform: none;
+  }
+
+  &:has(#theme-Container-Badge[zen-mods-container-badge-align="full"]) #userContext-icons:not([hidden]) {
+    inset-inline: calc(-1 * var(--cb-edge));
+    width: auto;
+    max-width: none;
+    transform: none;
+    border-radius: 6px;
+  }
+
+  /* Full width has the whole bar, so the max-width cap does not apply. */
+  &:has(#theme-Container-Badge[zen-mods-container-badge-align="full"]) #userContext-label {
+    max-width: 100% !important;
+  }
+}

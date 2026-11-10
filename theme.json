@@ -1,0 +1,19 @@
+{
+  "id": "affdb1af-e29c-4e30-ac0d-c10ee45d59d6",
+  "name": "Container Badge",
+  "description": "Shows the active tab's container name as a coloured pill in the URL bar, so containers that share a colour are still easy to tell apart.",
+  "homepage": "https://github.com/AnthonyWharton/zen-container-badge",
+  "style": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/affdb1af-e29c-4e30-ac0d-c10ee45d59d6/chrome.css",
+  "readme": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/affdb1af-e29c-4e30-ac0d-c10ee45d59d6/README.md",
+  "image": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/affdb1af-e29c-4e30-ac0d-c10ee45d59d6/image.png",
+  "preferences": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/affdb1af-e29c-4e30-ac0d-c10ee45d59d6/preferences.json",
+  "author": "AnthonyWharton",
+  "version": "1.0.0",
+  "tags": [
+    "containers",
+    "urlbar",
+    "productivity"
+  ],
+  "createdAt": "2026-11-09",
+  "updatedAt": "2026-11-09"
+}

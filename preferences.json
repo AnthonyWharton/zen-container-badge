@@ -1,0 +1,80 @@
+[
+  {
+    "property": "zen.mods.container-badge.style",
+    "label": "Badge style",
+    "type": "dropdown",
+    "defaultValue": "pill",
+    "options": [
+      {
+        "label": "Filled pill (default)",
+        "value": "pill"
+      },
+      {
+        "label": "Outline only",
+        "value": "outline"
+      },
+      {
+        "label": "Plain coloured text",
+        "value": "text"
+      }
+    ]
+  },
+  {
+    "property": "zen.mods.container-badge.placement",
+    "label": "Badge placement",
+    "type": "dropdown",
+    "defaultValue": "inline",
+    "options": [
+      {
+        "label": "Inline in the URL bar (default)",
+        "value": "inline"
+      },
+      {
+        "label": "On its own line under the URL bar (single-toolbar layout only)",
+        "value": "below"
+      }
+    ]
+  },
+  {
+    "property": "zen.mods.container-badge.align",
+    "label": "Alignment when on its own line",
+    "type": "dropdown",
+    "defaultValue": "center",
+    "options": [
+      {
+        "label": "Left",
+        "value": "left"
+      },
+      {
+        "label": "Centre (default)",
+        "value": "center"
+      },
+      {
+        "label": "Right",
+        "value": "right"
+      },
+      {
+        "label": "Full width",
+        "value": "full"
+      }
+    ]
+  },
+  {
+    "property": "zen.mods.container-badge.max-width",
+    "label": "Maximum badge width (CSS length, e.g. 9em or 120px)",
+    "type": "string",
+    "defaultValue": "9em"
+  },
+  {
+    "property": "zen.mods.container-badge.hide-icon",
+    "label": "Hide the container icon (show the name only)",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "zen.mods.container-badge.hide-when-typing",
+    "label": "Hide the badge while the URL bar is focused (inline placement only; on its own line it is always hidden while typing)",
+    "type": "checkbox",
+    "defaultValue": false
+  }
+]
