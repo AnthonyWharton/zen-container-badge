@@ -56,4 +56,6 @@ fi
 
 echo "Launching Zen with throwaway profile: $DIR"
 echo "Right-click the new-tab button (or use the container menu) to open tabs in the demo containers."
+echo "When done, quit it with Cmd+Q (closing the window is not enough): macOS runs one Zen.app at a time,"
+echo "so while this instance lives the Dock icon brings it forward instead of opening your real profile."
 exec "$ZEN" --profile "$DIR" --no-remote "$@" >/dev/null 2>&1 &
