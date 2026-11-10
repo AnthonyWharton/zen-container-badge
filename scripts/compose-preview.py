@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 W, H, MARGIN, GAP, RADIUS = 1200, 800, 48, 32, 14
 BG, FG, MUTED = (243, 243, 246), (28, 28, 32), (110, 110, 120)
-TITLE, SUBTITLE = "Container Badge", "The active tab's container name, right in Zen's URL bar"
+TITLE, SUBTITLE = "Container Badge", "Show the active tab's container name"
 
 
 def font(size, bold=False):
@@ -34,8 +34,8 @@ def rounded(img, r):
 def main(out, pairs):
     canvas = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(canvas)
-    d.text((MARGIN, 44), TITLE, font=font(44, bold=True), fill=FG)
-    d.text((MARGIN, 104), SUBTITLE, font=font(22), fill=MUTED)
+    d.text((MARGIN, 40), TITLE, font=font(52, bold=True), fill=FG)
+    d.text((MARGIN, 108), SUBTITLE, font=font(24), fill=MUTED)
 
     n = len(pairs)
     col_w = (W - 2 * MARGIN - GAP * (n - 1)) // n
