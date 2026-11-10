@@ -81,8 +81,10 @@ so it can be submitted unchanged if a store reopens.
 
 Preview image: `scripts/screenshot-profile.sh` launches Zen with a throwaway
 profile (made-up client containers, mod preinstalled, nothing personal) to
-screenshot in. Then run `scripts/make-preview.sh <screenshot.png>` to produce
-a 600×400 `image.png`, the size the store asked for; the readme uses it too.
+screenshot in. Take the shots at Retina scale (a plain macOS screenshot is
+2x), then either `scripts/make-preview.sh <screenshot.png>` for a single
+600×400 `image.png`, or `scripts/compose-preview.py image.png "Label" a.png
+"Label" b.png ...` (needs Pillow) to lay several out on one 1200×800 canvas.
 
 ## Compatibility
 
