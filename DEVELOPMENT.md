@@ -79,8 +79,10 @@ replacement. The mod is therefore distributed from this repository:
 `theme.json` keeps the store's format (with URLs pointing at this repository)
 so it can be submitted unchanged if a store reopens.
 
-Preview image: run `scripts/make-preview.sh <screenshot.png>` to produce a
-600×400 `image.png`, the size the store asked for; the readme uses it too.
+Preview image: `scripts/screenshot-profile.sh` launches Zen with a throwaway
+profile (made-up client containers, mod preinstalled, nothing personal) to
+screenshot in. Then run `scripts/make-preview.sh <screenshot.png>` to produce
+a 600×400 `image.png`, the size the store asked for; the readme uses it too.
 
 ## Compatibility
 
