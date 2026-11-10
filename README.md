@@ -9,9 +9,21 @@ printing the container name next to the address; Zen hides that label because
 its sidebar URL bar is narrow. This mod brings it back as a compact,
 truncating badge that fits the sidebar.
 
+## Install
+
+Zen's mods store stopped accepting submissions in mid-2026, so this mod is
+installed from the repository:
+
+1. Clone or download https://github.com/AnthonyWharton/zen-container-badge
+2. Run `scripts/install-dev.sh` (it finds your Zen profile automatically)
+3. Restart Zen
+
+To update, pull the latest changes and run the script again. To remove it,
+run `scripts/uninstall-dev.sh`.
+
 ## Options
 
-Open **Settings → Mods → Container Badge** to change:
+Open **Settings → Mods → Container Badge** (the cog) to change:
 
 | Option | What it does |
 | --- | --- |

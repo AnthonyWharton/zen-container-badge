@@ -10,7 +10,7 @@ chrome.css        the mod itself
 preferences.json  options shown under Settings → Mods
 theme.json        store metadata (id, version, URLs)
 README.md         store readme
-image.png         store preview image (add a screenshot before submitting)
+image.png         600x400 preview image shown in the marketplace
 scripts/          sideload / remove the mod in a local profile for testing
 ```
 
@@ -70,13 +70,17 @@ Firefox or Zen rule for the same property, regardless of specificity. Any
 declaration that competes with an existing rule needs `!important`; only
 properties nothing else sets can go without.
 
-## Submitting to the store
+## Distribution
 
-Open an issue on
-[zen-browser/theme-store](https://github.com/zen-browser/theme-store/issues/new?template=create-theme.yml)
-with the contents of `chrome.css`, `readme.md`, `preferences.json`, a preview
-image, and the name/description from `theme.json`. Note that themes in the
-store are licensed CC BY-NC-SA 4.0 by the store; this repository is MIT.
+Zen's official mods store (`zen-browser/theme-store`) was archived on
+2026-07-23 and no longer takes submissions, and there is no official
+replacement. The mod is therefore distributed from this repository:
+`scripts/install-dev.sh` copies it into a Zen profile and registers it, and
+`theme.json` keeps the store's format (with URLs pointing at this repository)
+so it can be submitted unchanged if a store reopens.
+
+Preview image: run `scripts/make-preview.sh <screenshot.png>` to produce a
+600×400 `image.png`, the size the store asked for; the readme uses it too.
 
 ## Compatibility
 
