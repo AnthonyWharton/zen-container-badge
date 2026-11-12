@@ -182,6 +182,16 @@
     position: static !important;
   }
 
+  /* `.urlbar-background` is a positioned sibling drawn before the input
+     container. Firefox keeps it underneath only because the container is
+     positioned too; once the container is static the background paints on
+     top of it and eats every click on the page-action and extension buttons.
+     #urlbar-container is a stacking context, so -1 puts it behind the
+     container's content but still above the toolbar. */
+  #urlbar:not([breakout-extend]) > .urlbar-background {
+    z-index: -1 !important;
+  }
+
   #urlbar > .urlbar-input-container {
     overflow: visible !important;
   }

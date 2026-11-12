@@ -37,11 +37,12 @@ scripts/install-dev.sh "/path/to/profile"
 ```
 
 Then restart Zen. After editing `chrome.css`, run the script again and
-restart Zen to reload it. Zen rebuilds its combined `chrome/zen-themes.css`
-from every mod's `chrome.css` whenever a mod setting changes, so changing any
-option in the mod's settings dialog (the cog in **Settings → Mods**) and
-changing it back also reloads the CSS without a restart. The on/off toggle is
-meant to do the same but has not reliably done so in testing. Remove the mod
+restart Zen. Zen loads only its combined `chrome/zen-themes.css`, and it
+rebuilds that file from every mod's `chrome.css` *only* when a mod setting
+changes (the `zen.mods.updated-value-observer` pref flips), never at startup.
+The install script therefore regenerates it itself. Without that, the only way
+to pick up an edit is to change any option in the mod's settings dialog (the
+cog in **Settings → Mods**) and change it back. Remove the mod
 with `scripts/uninstall-dev.sh`.
 
 The version shown in Settings → Mods is `theme.json`'s version with a `-dev`
